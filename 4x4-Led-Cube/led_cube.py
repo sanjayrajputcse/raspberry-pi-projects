@@ -1,11 +1,15 @@
 import time
 import RPi.GPIO as GPIO
+from pattern_layer import layer_pattern
+from pattern_single_led import single_led_pattern
+from pattern_cube import cube_pattern
+from pattern_rain import rain_pattern
+
 
 GPIO.setwarnings(False)
 GPIO.setmode(GPIO.BOARD)
 
-delay = 0.05
-delayLayer = 0.2
+delay = 0.1
 
 L1 = 3
 L2 = 5
@@ -30,64 +34,18 @@ A15 = 33
 A16 = 35
 
 
-rows = [3, 5, 7, 8]
+layers = [3, 5, 7, 8]
 cols = [10, 12, 11, 13, 15, 16, 18, 19, 21, 23, 22, 24, 26, 31, 33, 35]
-
-
-
-def single_led_pattern():
-    for row in rows:
-        print("Layer : " + str(row))
-        GPIO.output(row, GPIO.HIGH)
-        for col in cols:
-            print("LED ON : " + str(col))
-            GPIO.output(col, GPIO.LOW)
-            time.sleep(delay)
-            print("LED OFF : " + str(col))
-            GPIO.output(col, GPIO.HIGH)
-        GPIO.output(row, GPIO.LOW)
-
-
-
-def layer_pattern():
-    #Front Top
-    for col in cols:
-        GPIO.output(col, GPIO.LOW)
-    for i in range(0, 4):
-        GPIO.output(rows[3 - i], GPIO.HIGH)
-        time.sleep(delayLayer)
-        GPIO.output(rows[3 - i], GPIO.LOW)
-    for col in cols:
-        GPIO.output(col, GPIO.HIGH)
-    #From Front
-    for row in rows:
-        GPIO.output(row, GPIO.HIGH)
-    for i in range(0, 4):
-        print("Layer(From Front) " + str(i + 1))
-        for start in range(i * 4, i * 4 + 4):
-            GPIO.output(cols[start], GPIO.LOW)
-        time.sleep(delayLayer)
-        for start in range(i * 4, i * 4 + 4):
-            GPIO.output(cols[start], GPIO.HIGH)
-    #From Left
-    for i in range(0, 4):
-        print("Layer(From Left) " + str(i + 1))
-        start = i
-        for j in range(0, 4):
-            GPIO.output(cols[start], GPIO.LOW)
-            start = start + 4
-        time.sleep(delayLayer)
-        start = i
-        for j in range(0, 4):
-            GPIO.output(cols[start], GPIO.HIGH)
-            start = start + 4
-    for row in rows:
-        GPIO.output(row, GPIO.LOW)
-
+grid = [
+        [A1, A2, A3, A4],
+        [A5, A6, A7, A8],
+        [A9, A10, A11, A12],
+        [A13, A14, A15, A16]
+       ]
 
 try:
     
-    for pin in rows:
+    for pin in layers:
         print("Setup Pin : " + str(pin))
         GPIO.setup(pin, GPIO.OUT)
         GPIO.output(pin, GPIO.LOW)
@@ -95,19 +53,25 @@ try:
         print("Setup Pin : " + str(pin))
         GPIO.setup(pin, GPIO.OUT)
         GPIO.output(pin, GPIO.HIGH)
-    time.sleep(2)
     while True:
  
-        #Single LED PATTERN
-        single_led_pattern()  
-        time.sleep(0.1)
+        # Single LED PATTERN
+        single_led_pattern(layers, cols)
+        #time.sleep(delay)
 
-        #Layer wise Patter
-        layer_pattern()
-        time.sleep(delayLayer)
-        layer_pattern()
-        time.sleep(delay)
-except KeyboardInterrupt:
+        # Layer wise Patter
+        layer_pattern(layers, cols)
+        #time.sleep(delay)
+
+        # Cube
+        cube_pattern(layers, grid)
+        #time.sleep(delay)
+
+        # Rain
+        rain_pattern(layers, cols)
+        #time.sleep(0.5)
+
+except (Exception, KeyboardInterrupt):
     GPIO.cleanup()
     exit
 
