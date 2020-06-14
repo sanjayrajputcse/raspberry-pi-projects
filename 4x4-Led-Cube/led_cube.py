@@ -4,7 +4,8 @@ from pattern_layer import layer_pattern
 from pattern_single_led import single_led_pattern
 from pattern_cube import cube_pattern
 from pattern_rain import rain_pattern
-
+from pattern_full_cube import full_cube
+from pattern_snake import snake_game
 
 GPIO.setwarnings(False)
 GPIO.setmode(GPIO.BOARD)
@@ -54,24 +55,28 @@ try:
         GPIO.setup(pin, GPIO.OUT)
         GPIO.output(pin, GPIO.HIGH)
     while True:
- 
+
         # Single LED PATTERN
         single_led_pattern(layers, cols)
-        #time.sleep(delay)
 
         # Layer wise Patter
         layer_pattern(layers, cols)
-        #time.sleep(delay)
 
         # Cube
         cube_pattern(layers, grid)
-        #time.sleep(delay)
 
         # Rain
         rain_pattern(layers, cols)
-        #time.sleep(0.5)
 
-except (Exception, KeyboardInterrupt):
+        # full_cube
+        full_cube(layers, grid)
+
+        # snake
+        snake_game(layers, grid)
+
+
+except (Exception, KeyboardInterrupt) as e:
+    print(e)
     GPIO.cleanup()
     exit
 
