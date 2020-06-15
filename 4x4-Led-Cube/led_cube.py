@@ -74,7 +74,6 @@ try:
         # snake
         snake_game(layers, grid)
 
-
 except (Exception, KeyboardInterrupt) as e:
     print(e)
     GPIO.cleanup()

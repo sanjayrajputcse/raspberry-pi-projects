@@ -2,7 +2,7 @@ from time import sleep
 import RPi.GPIO as GPIO
 import utility
 
-delay = 3
+delay = 1
 
 
 def full_cube(layers, grid):

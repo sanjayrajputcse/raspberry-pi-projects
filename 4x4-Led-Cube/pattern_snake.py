@@ -45,6 +45,7 @@ def get_empty_positions():
 
 
 def init(grid):
+    del snake[:]
     GPIO.output(grid[1][1], GPIO.LOW)
     GPIO.output(grid[1][2], GPIO.LOW)
     GPIO.output(grid[1][3], GPIO.LOW)
@@ -115,18 +116,19 @@ def capture(insect_i, insect_j, grid):
                 s_i = s_i - 1
         print ("next move : " + tuple_str(s_i, s_j))
         snake.insert(0, (s_i, s_j))
-        if s_i == insect_i and s_j == insect_j and False:
-            print ""
-        else:
-            prev_i, prev_j = snake.pop()
-            print "prev : " + tuple_str(prev_i, prev_j)
-            GPIO.output(grid[prev_i][prev_j], GPIO.HIGH)
+        # if s_i == insect_i and s_j == insect_j and False:
+        #     print ""
+        # else:
+        prev_i, prev_j = snake.pop()
+        print "prev : " + tuple_str(prev_i, prev_j)
+        GPIO.output(grid[prev_i][prev_j], GPIO.HIGH)
         GPIO.output(grid[s_i][s_j], GPIO.LOW)
         sleep(delay)
 
 
 def snake_game(layers, grid):
-    GPIO.output(layers[1], GPIO.HIGH)
+    utility.reset(layers, grid)
+    GPIO.output(layers[3], GPIO.HIGH)
     init(grid)
     for insects in range(0, 30):
         insect_i, insect_j = next_insect(grid)
