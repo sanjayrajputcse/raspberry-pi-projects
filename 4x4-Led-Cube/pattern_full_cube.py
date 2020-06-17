@@ -6,7 +6,7 @@ delay = 1
 
 
 def full_cube(layers, grid):
-    for i in range(0, 5):
+    for i in range(0, 3):
         utility.on_all_layers(layers)
         utility.on_all_grid(grid)
         sleep(delay)
